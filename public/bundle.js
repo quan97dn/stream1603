@@ -72,11 +72,10 @@
 
 const $ = __webpack_require__(37);
 const io = __webpack_require__(39);
-const Peer = __webpack_require__(38);
 const startCamera = __webpack_require__(41);
 const playMyStream = __webpack_require__(40);
-const playFriendStream = __webpack_require__(87);
 const getInitSignal = __webpack_require__(88);
+const getAnswerSignal = __webpack_require__(89);
 
 $('document').ready(() => {
     const socket = io();
@@ -118,20 +117,8 @@ $('document').ready(() => {
     socket.on('SOMEONE_CALL_YOU', signalData => {
         const { idSender, data } = signalData;
         startCamera()
-        .then(stream => {
-            playMyStream(stream);
-            const p = new Peer({
-                initiator: false,
-                trickle: false,
-                stream
-            });
-            p.signal(data);
-            p.on('signal', myData => {
-                socket.emit('ACCEPT_SIGNAL', { idSender, data: myData });
-            });
-            p.on('stream', stream2 => playFriendStream(stream2));
-        })
-        .catch(err => console.log(err));
+        .then(stream => getAnswerSignal(stream, socket, data))
+        .then(myData => socket.emit('ACCEPT_SIGNAL', { idSender, data: myData }));
     });
 });
 
@@ -25556,6 +25543,31 @@ const getInitSignal = (stream, socket) => (
 );
 
 module.exports = getInitSignal;
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Peer = __webpack_require__(38);
+const playMyStream = __webpack_require__(40);
+const playFriendStream = __webpack_require__(87);
+
+const getAnswerSignal = (stream, socket, callerSignal) => (
+    new Promise((resolve) => {
+        playMyStream(stream);
+        const p = new Peer({
+            initiator: false,
+            trickle: false,
+            stream
+        });
+        p.signal(callerSignal);
+        p.on('stream', stream2 => playFriendStream(stream2));
+        p.on('signal', myData => resolve(myData));
+    })
+);
+
+module.exports = getAnswerSignal;
 
 
 /***/ })

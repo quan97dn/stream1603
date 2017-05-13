@@ -1,10 +1,9 @@
 const $ = require('jquery');
 const io = require('socket.io-client');
-const Peer = require('simple-peer');
 const startCamera = require('./startCamera');
 const playMyStream = require('./playMyStream');
-const playFriendStream = require('./playFriendStream');
 const getInitSignal = require('./getInitSignal');
+const getAnswerSignal = require('./getAnswerSignal');
 
 $('document').ready(() => {
     const socket = io();
@@ -46,20 +45,8 @@ $('document').ready(() => {
     socket.on('SOMEONE_CALL_YOU', signalData => {
         const { idSender, data } = signalData;
         startCamera()
-        .then(stream => {
-            playMyStream(stream);
-            const p = new Peer({
-                initiator: false,
-                trickle: false,
-                stream
-            });
-            p.signal(data);
-            p.on('signal', myData => {
-                socket.emit('ACCEPT_SIGNAL', { idSender, data: myData });
-            });
-            p.on('stream', stream2 => playFriendStream(stream2));
-        })
-        .catch(err => console.log(err));
+        .then(stream => getAnswerSignal(stream, socket, data))
+        .then(myData => socket.emit('ACCEPT_SIGNAL', { idSender, data: myData }));
     });
 });
 
