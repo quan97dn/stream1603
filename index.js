@@ -41,4 +41,9 @@ io.on('connection', socket => {
         socket.to(destId)
         .emit('SOMEONE_CALL_YOU', { data, idSender: socket.id });
     });
+
+    socket.on('ACCEPT_SIGNAL', signalData => {
+        const { idSender, data } = signalData;
+        socket.to(idSender).emit('RECEIVE_ACCEPTION', data);
+    });
 });

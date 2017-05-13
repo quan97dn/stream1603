@@ -27,6 +27,7 @@ $('document').ready(() => {
             p.on('signal', data => {
                 socket.emit('NEW_CALL_SIGNAL', { dest, data });
             });
+            
         })
         .catch(err => console.log(err));
     });
