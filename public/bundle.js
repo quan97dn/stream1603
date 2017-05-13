@@ -86,7 +86,7 @@ $('document').ready(() => {
     });
 
     $('#ulUser').on('click', 'li', function () {
-        console.log($(this).text());
+        const dest = $(this).text();
         //make call
         startCamera()
         .then(stream => {
@@ -97,7 +97,7 @@ $('document').ready(() => {
                 stream
             });
             p.on('signal', data => {
-                console.log(data.type);
+                socket.emit('NEW_CALL_SIGNAL', { dest, data });
             });
         })
         .catch(err => console.log(err));

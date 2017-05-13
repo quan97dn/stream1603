@@ -33,4 +33,10 @@ io.on('connection', socket => {
             io.emit('NGUOI_DUNG_THOAT', socket.username);
         }
     });
+
+    socket.on('NEW_CALL_SIGNAL', signalData => {
+        const { dest, data } = signalData;
+        const index = arrSocket.findIndex(e => e.username === dest);
+        console.log(arrSocket[index].id, data.type);
+    });
 });
