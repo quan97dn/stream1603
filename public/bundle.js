@@ -18354,7 +18354,7 @@ $('document').ready(() => {
             $('#divChat').show();
             return $('#divSignUp').hide();
         }
-        alert('Username da ton tai!');
+        alert('Username da ton tai!'); // eslint-disable-line
     });
 
     socket.on('NGUOI_DUNG_THOAT', username => {
