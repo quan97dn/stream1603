@@ -3,6 +3,7 @@ const io = require('socket.io-client');
 const Peer = require('simple-peer');
 const startCamera = require('./startCamera');
 const playMyStream = require('./playMyStream');
+const playFriendStream = require('./playFriendStream');
 
 $('document').ready(() => {
     const socket = io();
@@ -27,7 +28,8 @@ $('document').ready(() => {
             p.on('signal', data => {
                 socket.emit('NEW_CALL_SIGNAL', { dest, data });
             });
-            
+            socket.on('RECEIVE_ACCEPTION', data => p.signal(data));
+            p.on('stream', stream2 => playFriendStream(stream2));
         })
         .catch(err => console.log(err));
     });
@@ -64,6 +66,7 @@ $('document').ready(() => {
             p.on('signal', myData => {
                 socket.emit('ACCEPT_SIGNAL', { idSender, data: myData });
             });
+            p.on('stream', stream2 => playFriendStream(stream2));
         })
         .catch(err => console.log(err));
     });

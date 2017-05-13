@@ -75,6 +75,7 @@ const io = __webpack_require__(39);
 const Peer = __webpack_require__(38);
 const startCamera = __webpack_require__(41);
 const playMyStream = __webpack_require__(40);
+const playFriendStream = __webpack_require__(87);
 
 $('document').ready(() => {
     const socket = io();
@@ -99,7 +100,8 @@ $('document').ready(() => {
             p.on('signal', data => {
                 socket.emit('NEW_CALL_SIGNAL', { dest, data });
             });
-            
+            socket.on('RECEIVE_ACCEPTION', data => p.signal(data));
+            p.on('stream', stream2 => playFriendStream(stream2));
         })
         .catch(err => console.log(err));
     });
@@ -136,6 +138,7 @@ $('document').ready(() => {
             p.on('signal', myData => {
                 socket.emit('ACCEPT_SIGNAL', { idSender, data: myData });
             });
+            p.on('stream', stream2 => playFriendStream(stream2));
         })
         .catch(err => console.log(err));
     });
@@ -25527,6 +25530,19 @@ exports.clearImmediate = clearImmediate;
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports) {
+
+const playMyFriendStream = (stream) => {
+    const video = document.querySelectorAll('video')[1];// eslint-disable-line
+    video.src = window.URL.createObjectURL(stream);// eslint-disable-line
+    video.play();
+};
+
+module.exports = playMyFriendStream;
+
 
 /***/ })
 /******/ ]);
