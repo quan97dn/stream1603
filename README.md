@@ -5,3 +5,6 @@ click -> make a call
     step 4: listen for other's signal
     step 5: on stream function
     step 6: open the call
+
+Xem duoc video
+server log ra id socket cua nguoi nhan

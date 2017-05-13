@@ -18345,6 +18345,8 @@ $('document').ready(() => {
 
     $('#ulUser').on('click', 'li', function () {
         console.log($(this).text());
+        //make call
+        
     });
 
     socket.on('XAC_NHAN_DANG_KY', arrUser => {
