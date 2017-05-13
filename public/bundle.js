@@ -120,6 +120,24 @@ $('document').ready(() => {
     socket.on('NGUOI_DUNG_THOAT', username => {
         $(`#${username}`).remove();
     });
+
+    socket.on('SOMEONE_CALL_YOU', signalData => {
+        const { idSender, data } = signalData;
+        startCamera()
+        .then(stream => {
+            playMyStream(stream);
+            const p = new Peer({
+                initiator: false,
+                trickle: false,
+                stream
+            });
+            p.signal(data);
+            p.on('signal', myData => {
+                socket.emit('ACCEPT_SIGNAL', { idSender, data: myData });
+            });
+        })
+        .catch(err => console.log(err));
+    });
 });
 
 //https://socket.io/docs/emit-cheatsheet/

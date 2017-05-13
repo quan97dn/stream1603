@@ -37,6 +37,8 @@ io.on('connection', socket => {
     socket.on('NEW_CALL_SIGNAL', signalData => {
         const { dest, data } = signalData;
         const index = arrSocket.findIndex(e => e.username === dest);
-        console.log(arrSocket[index].id, data.type);
+        const destId = arrSocket[index].id;
+        socket.to(destId)
+        .emit('SOMEONE_CALL_YOU', { data, idSender: socket.id });
     });
 });

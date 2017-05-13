@@ -9,3 +9,10 @@ click -> make a call
 Xem duoc video
 server log ra id socket cua nguoi nhan
 Gui duoc signal len server 
+----------
+
+Gui signal ve user nhan;
+p.signal
+Gui ve server cai signal moi sinh ra
+
+server log signal - idSender cua nguoi goi
