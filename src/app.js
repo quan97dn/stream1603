@@ -10,6 +10,10 @@ $('document').ready(() => {
         socket.emit('DANG_KY_USERNAME', username);
     });
 
+    $('#ulUser').on('click', 'li', function () {
+        console.log($(this).text());
+    });
+
     socket.on('XAC_NHAN_DANG_KY', arrUser => {
         if (arrUser) {
             arrUser.forEach(e => {
