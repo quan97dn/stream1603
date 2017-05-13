@@ -8,3 +8,4 @@ click -> make a call
 
 Xem duoc video
 server log ra id socket cua nguoi nhan
+Gui duoc signal len server 

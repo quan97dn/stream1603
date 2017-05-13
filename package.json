@@ -10,6 +10,7 @@
     "express": "^4.15.2",
     "jquery": "^3.2.1",
     "pg": "^6.1.5",
+    "simple-peer": "^8.1.0",
     "socket.io": "^1.7.3",
     "socket.io-client": "^1.7.3"
   },

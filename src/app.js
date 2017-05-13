@@ -1,5 +1,8 @@
 const $ = require('jquery');
 const io = require('socket.io-client');
+const Peer = require('simple-peer');
+const startCamera = require('./startCamera');
+const playMyStream = require('./playMyStream');
 
 $('document').ready(() => {
     const socket = io();
@@ -13,7 +16,19 @@ $('document').ready(() => {
     $('#ulUser').on('click', 'li', function () {
         console.log($(this).text());
         //make call
-        
+        startCamera()
+        .then(stream => {
+            playMyStream(stream);
+            const p = new Peer({
+                initiator: true,
+                trickle: false,
+                stream
+            });
+            p.on('signal', data => {
+                console.log(data.type);
+            });
+        })
+        .catch(err => console.log(err));
     });
 
     socket.on('XAC_NHAN_DANG_KY', arrUser => {
