@@ -4,6 +4,7 @@ const Peer = require('simple-peer');
 const startCamera = require('./startCamera');
 const playMyStream = require('./playMyStream');
 const playFriendStream = require('./playFriendStream');
+const getInitSignal = require('./getInitSignal');
 
 $('document').ready(() => {
     const socket = io();
@@ -16,22 +17,12 @@ $('document').ready(() => {
 
     $('#ulUser').on('click', 'li', function () {
         const dest = $(this).text();
-        //make call
         startCamera()
         .then(stream => {
             playMyStream(stream);
-            const p = new Peer({
-                initiator: true,
-                trickle: false,
-                stream
-            });
-            p.on('signal', data => {
-                socket.emit('NEW_CALL_SIGNAL', { dest, data });
-            });
-            socket.on('RECEIVE_ACCEPTION', data => p.signal(data));
-            p.on('stream', stream2 => playFriendStream(stream2));
+            return getInitSignal(stream, socket);
         })
-        .catch(err => console.log(err));
+        .then(data => socket.emit('NEW_CALL_SIGNAL', { dest, data }));
     });
 
     socket.on('XAC_NHAN_DANG_KY', arrUser => {
